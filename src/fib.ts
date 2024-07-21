@@ -2,9 +2,11 @@ const base64 = "AGFzbQEAAAABBgFgAX8BfwMCAQAHBwEDRmliAAAKHgEcACAAQQJJBH8gAAUgAEEB
 const buffer = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
 const wasmModule = new WebAssembly.Module(buffer);
 const instance = new WebAssembly.Instance(wasmModule, {});
-const fibWasm = instance.exports.Fib;
+console.log('instance', instance);
 
-function fibJs(n) {
+const fibWasm = instance.exports.Fib as (n: number) => number;
+
+function fibJs(n: number): number {
   return n < 2 ? n : fibJs(n - 1) + fibJs(n - 2)
 }
 for (let i = 0; i < 10; i++) {
@@ -15,7 +17,7 @@ for (let i = 0; i < 10; i++) {
 const N = 100
 const MAX = 25
 
-function test(f) {
+function test(f: (n: number) => number) {
   const start = +new Date()
   for (let i = 0; i < N; i++) {
     for (let k = 0; k < MAX; k++) {
